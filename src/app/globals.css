@@ -1,26 +1,192 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
-@theme inline {
+/* 
+  O bloco @theme é o coração da configuração do Tailwind v4.
+  Ele transforma variáveis CSS em classes de utilitário (ex: bg-primary, text-primus-blue).
+*/
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Cores da UI Kit (Shadcn) */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Cores personalizadas da sua marca */
+  --color-primus-blue: var(--primus-blue);
+  --color-primus-red: var(--primus-red);
+  --color-primus-blue-light: var(--primus-blue-light);
+  --color-primus-blue-dark: var(--primus-blue-dark);
+  --color-primus-red-light: var(--primus-red-light);
+  --color-primus-red-dark: var(--primus-red-dark);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* 
+  Aqui definimos os valores reais das variáveis para os temas claro e escuro.
+*/
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+
+  /* Cores da Logo Primus */
+  --primus-red: oklch(0.58 0.22 25.5); /* ~ #e62e24 */
+  --primus-blue: oklch(0.39 0.13 264); /* ~ #2a3a8a */
+  --primus-red-light: oklch(0.68 0.22 25.5);
+  --primus-red-dark: oklch(0.48 0.22 25.5);
+  --primus-blue-light: oklch(0.49 0.13 264);
+  --primus-blue-dark: oklch(0.29 0.13 264);
+
+  /* Cores da UI Kit */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: var(--primus-red);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: var(--primus-blue);
+}
+
+.dark {
+  --background: oklch(0.17 0.01 264);
+  --foreground: oklch(0.985 0 0);
+
+  /* Cores da Logo Primus para o modo escuro */
+  --primus-red: oklch(0.65 0.22 25.5);
+  --primus-blue: oklch(0.55 0.13 264);
+  --primus-red-light: oklch(0.75 0.22 25.5);
+  --primus-red-dark: oklch(0.55 0.22 25.5);
+  --primus-blue-light: oklch(0.65 0.13 264);
+  --primus-blue-dark: oklch(0.45 0.13 264);
+
+  /* Cores da UI Kit */
+  --card: oklch(0.17 0.01 264);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  /* Glow simples por box-shadow */
+  .glow-blue {
+    --glow-color: color-mix(in oklab, var(--primus-blue-light) 55%, transparent);
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--primus-blue) 40%, transparent),
+      0 0 4px -1px var(--glow-color),
+      0 0 10px -2px var(--glow-color);
+    transition: box-shadow .25s ease;
+  }
+  .glow-blue:hover {
+    box-shadow:
+      0 0 0 1px var(--primus-blue-light),
+      0 0 6px 0 var(--glow-color),
+      0 0 14px -1px var(--glow-color);
+  }
+
+  .glow-red {
+    --glow-color: color-mix(in oklab, var(--primus-red-light) 55%, transparent);
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--primus-red) 40%, transparent),
+      0 0 4px -1px var(--glow-color),
+      0 0 10px -2px var(--glow-color);
+    transition: box-shadow .25s ease;
+  }
+  .glow-red:hover {
+    box-shadow:
+      0 0 0 1px var(--primus-red-light),
+      0 0 6px 0 var(--glow-color),
+      0 0 14px -1px var(--glow-color);
+  }
+
+  /* Versão com pseudo-elemento para halo mais difuso - AGORA SEPARADA POR COR */
+  .halo-blue,
+  .halo-red {
+    position: relative;
+  }
+
+  .halo-blue::before,
+  .halo-red::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: inherit;
+    background:
+      radial-gradient(circle at 30% 20%, var(--halo-color, var(--primus-blue-light)) 0%, transparent 20%),
+      radial-gradient(circle at 70% 80%, var(--halo-color, var(--primus-blue-light)) 0%, transparent 25%);
+    filter: blur(14px);
+    opacity: .45;
+    z-index: -1;
+    transition: opacity .3s ease, filter .3s ease;
+  }
+
+  /* Ajuste de cor específico para RED */
+  .halo-red::before {
+    background:
+      radial-gradient(circle at 30% 20%, var(--halo-color, var(--primus-red-light)) 0%, transparent 20%),
+      radial-gradient(circle at 70% 80%, var(--halo-color, var(--primus-red-light)) 0%, transparent 25%);
+  }
+
+  .halo-blue:hover::before,
+  .halo-red:hover::before {
+    opacity: .7;
+    filter: blur(18px);
+  }
+
+  /* Pulsação opcional */
+  @keyframes pulse-glow {
+    0%, 100% { opacity: .55; filter: blur(14px); }
+    50% { opacity: .85; filter: blur(18px); }
+  }
+  .glow-pulse.halo-blue::before,
+  .glow-pulse.halo-red::before {
+    animation: pulse-glow 4s ease-in-out infinite;
+  }
 }
