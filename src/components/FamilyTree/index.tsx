@@ -46,7 +46,7 @@ export default function FamilyTree() {
       {error && <p className="text-sm text-primus-red">{error}</p>}
       {!loading && !error && tree && (
         <div className="overflow-auto w-full h-full">
-          <div className="flex justify-center min-w-max">
+          <div className="flex justify-center p-4 min-w-max">
             <PrimusNode primus={tree} depth={0} maxDepth={5} />
           </div>
         </div>

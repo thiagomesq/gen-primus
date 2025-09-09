@@ -60,5 +60,31 @@ export function usePrimus() {
         router.push("/minha-arvore");
     }
 
-    return { primusList, createPrimus, getPrimus, getFamilyTree };
+    async function updatePrimus(id: string, updatedData: Partial<Primus>): Promise<boolean> {
+        try {
+            const response = await fetch(`/api/primus/${id}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(updatedData),
+                });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Falha ao atualizar o perfil');
+            }
+
+            toast.success("Perfil atualizado com sucesso!");
+            return true;
+        } catch (error: any) {
+            console.error("Failed to update primus:", error);
+            toast.error(error.message || "Erro ao atualizar o perfil");
+            return false;
+        }
+    }
+
+    return { primusList, createPrimus, getPrimus, getFamilyTree, updatePrimus };
 }

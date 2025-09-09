@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "./AuthProvider";
 import { Route, User } from "@/interfaces";
 import { GitFork, Search, User2 } from "lucide-react";
-import { FaCog } from "react-icons/fa";
+import { FaChartBar } from "react-icons/fa";
 
 interface RouteContextType {
   routes: Route[];
@@ -22,9 +22,9 @@ export const RouteProvider = ({ children }: { children: React.ReactNode }) => {
   const routes: Route[] = [
     { name: 'Pesquisa', href: "/pesquisa", icon: Search, auth: true },
     { name: '', href: "/completar-perfil", icon: null, auth: isCreationPending },
-    { name: 'Perfil', href: "/perfil", icon: User2, auth: isUser },
+    { name: 'Perfil', href: "/perfil/" + user?.perfil, icon: User2, auth: isUser },
     { name: 'Minha Árvore', href: "/minha-arvore", icon: GitFork, auth: isUser },
-    { name: 'Dashboard', href: "/dashboard", icon: FaCog, auth: isAdmin },
+    { name: 'Dashboard', href: "/dashboard", icon: FaChartBar, auth: isAdmin },
   ];
 
   const checkRoute = (route: string) => {

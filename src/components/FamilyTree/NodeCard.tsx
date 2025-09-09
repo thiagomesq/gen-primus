@@ -7,15 +7,23 @@ import { ExtPrimus } from '@/interfaces/Primus';
 import { formatDate, calcAge } from '@/lib/utils';
 import { gender } from '@/interfaces';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useAuth } from '@/providers/AuthProvider';
+import { Edit } from 'lucide-react';
 
 export const NodeCard = ({ primus, showSpouse }: { primus: ExtPrimus, showSpouse?: boolean }) => {
-  const isFather = primus.gender === 'MASCULINO';
-  const baseClasses = isFather
-    ? 'bg-primus-blue-light/10 glow-blue halo-blue'
-    : 'bg-primus-red-light/10 glow-red halo-red';
-  const hoverClasses = isFather
-    ? 'bg-sky-50 halo-blue'
-    : 'bg-rose-50 halo-red';
+  const { user } = useAuth();
+  const isMale = primus.gender === 'MASCULINO';
+  const hasGender = primus.gender === 'MASCULINO' || primus.gender === 'FEMININO';
+
+  const baseClasses = hasGender
+    ? (isMale ? 'bg-primus-blue-light/10 glow-blue halo-blue' : 'bg-primus-red-light/10 glow-red halo-red')
+    : 'bg-gray-100 dark:bg-gray-700';
+
+  const hoverClasses = hasGender
+    ? (isMale ? 'bg-sky-50 dark:bg-primus-blue-light/20 halo-blue' : 'bg-rose-50 dark:bg-primus-red-light/20 halo-red')
+    : 'bg-gray-200 dark:bg-white/10';
+
   const birth = formatDate(primus.birth);
   const death = formatDate(primus.death);
   const age = calcAge(primus.birth, primus.death);
@@ -27,7 +35,14 @@ export const NodeCard = ({ primus, showSpouse }: { primus: ExtPrimus, showSpouse
   return (
     <HoverCard openDelay={150}>
       <HoverCardTrigger asChild>
-        <Card className={`${baseClasses} border text-xs p-2 w-44 cursor-pointer transition-shadow my-3`}>
+        <Card className={`${baseClasses} border text-xs p-2 w-44 cursor-pointer transition-shadow my-3 relative group`}>
+          {user && (user.contributor || user.admin || primus.id === user.perfil) && (
+            <Link href={`/perfil/${primus.id}`}>
+              <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <Edit className="h-3 w-3 text-gray-500 hover:text-gray-700" />
+              </div>
+            </Link>
+          )}
           <div className="font-semibold text-sm leading-tight truncate">{primus.name}</div>
           {!showDeath ? (
             <div className="space-y-0.5">

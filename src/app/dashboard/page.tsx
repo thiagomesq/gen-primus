@@ -1,5 +1,3 @@
-
-
 export default function DashboardPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8">
@@ -8,5 +6,5 @@ export default function DashboardPage() {
           Este é o conteúdo principal da sua página de dashboard.
       </p>
     </div>
-);
+  );
 }
