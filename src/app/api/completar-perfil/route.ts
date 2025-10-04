@@ -1,4 +1,4 @@
-import { admin, adminDb } from '@/lib/firebase-admin';
+import { admin, adminDb, adminAuth } from '@/lib/firebase-admin';
 import { NextRequest, NextResponse } from "next/server";
 import { CreatePrimus } from "@/interfaces";
 
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing or invalid authorization header" }, { status: 401 });
     }
     const token = authorization.split("Bearer ")[1];
-    const decodedToken = await admin.auth().verifyIdToken(token);
+    const decodedToken = await adminAuth.verifyIdToken(token);
     const uid = decodedToken.uid;
 
     // Payload
